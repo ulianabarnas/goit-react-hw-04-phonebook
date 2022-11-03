@@ -17,8 +17,8 @@ export default function ContactList({ contacts, onDeleteContact }) {
     <List>
       {elements}
     </List>
-  )
-}
+  );
+};
 
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(
@@ -28,4 +28,4 @@ ContactList.propTypes = {
       id: PropTypes.string.isRequired,
     })).isRequired,
   onDeleteContact: PropTypes.func.isRequired,
-}
+};

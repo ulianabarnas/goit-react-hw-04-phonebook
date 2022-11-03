@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const FilterLabel = styled(Label)`
     color: ${p => p.theme.colors.white};
-`
+`;
 
 export const FilterInput = styled.input`
     width: 100%;
@@ -16,4 +16,4 @@ export const FilterInput = styled.input`
     border-radius: ${p => p.theme.radii.normal};
     box-sizing: border-box;
     color: ${p => p.theme.colors.text};
-`
+`;

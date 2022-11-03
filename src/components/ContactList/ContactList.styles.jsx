@@ -4,7 +4,7 @@ import { Button } from "components/ContactForm/ContactForm.styles";
 
 export const List = styled.ul`
     text-align: left;
-`
+`;
 
 export const Item = styled.li`
     display: flex;
@@ -14,12 +14,12 @@ export const Item = styled.li`
     
     :not(:last-child) {
         margin-bottom: 10px;
-    }
-`
+    };
+`;
 
 export const Icon = styled(FaPhoneAlt)`
     margin-right:  ${p => p.theme.space[3]}px;
-`
+`;
 
 export const ContactButton = styled(Button)`
     display: inline-block;
@@ -32,5 +32,5 @@ export const ContactButton = styled(Button)`
 
     :hover, :focus {
         box-shadow: ${p => p.theme.shadows.normal};
-    }
-`
+    };
+`;

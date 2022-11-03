@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import ContactForm from 'components/ContactForm/ContactForm';
@@ -6,118 +6,88 @@ import ContactList from 'components/ContactList/ContactList';
 import Filter from 'components/Filter/Filter';
 import Box from 'components/Box/Box';
 import { Subtitle, Title } from './App.styles';
+import useLocalStorage from 'hooks/useLocalStorage';
 
+export default function App() {
+  const [contacts, setContacts] = useLocalStorage('contacts', []);
+  const [filter, setFilter] = useState('');
 
-export default class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  }
-
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-
-  componentDidUpdate (_, prevState) {
-    const newContacts = this.state.contacts;
-    const prevContacts = prevState.contacts;
-
-    if (newContacts !== prevContacts) {
-      localStorage.setItem('contacts', JSON.stringify(newContacts));
-    }
-  }
-  
-  addContact = (contact) => {
+  const addContact = (contact) => {
     const { name } = contact;
-    if (this.isDublicate(name)) {
+    if (isDublicate(name)) {
       return Notify.info(`${name} is already in contacts.`);
-    }
+    };
 
-    this.setState((prevState) => {
+    setContacts((prevState) => {
       const newContact = {
         id: nanoid(),
         ...contact
       }
 
-      return {
-        contacts: [...prevState.contacts, newContact],
-      }
+      return [...prevState, newContact];
     })
-  }
+  };
 
-  isDublicate = (contactName) => {
-    const { contacts } = this.state;
-    const result = contacts.find(contact => contact.name === contactName);
-    return result;
-  }
+  const isDublicate = (contactName) => {
+    return contacts.find(contact => contact.name === contactName);
+  };
 
-  changeFilter = (e) => {
-    this.setState({filter: e.target.value})
-  }
+  const changeFilter = (e) => {
+    setFilter(e.target.value)
+  };
 
-  getFilteredContacts = () => {
-    const { filter, contacts } = this.state;
+  const getFilteredContacts = () => {
     const normalizedFilter = filter.toLowerCase();
 
     return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
-  }
+  };
 
-  deleteContact = (contactId) => {
-    this.setState((prevState) => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId)
-    }))
-  }
+  const filteredContacts = getFilteredContacts();
 
-  render() {
-    const { addContact, changeFilter, getFilteredContacts, deleteContact } = this;
-    const { filter } = this.state;
+  const deleteContact = (contactId) => {
+    setContacts((prevState) => {
+      return prevState.filter(contact => contact.id !== contactId);
+    })
+  };
 
-    const filteredContacts = getFilteredContacts();
-
-    return (
+  return (
+    <Box
+      as="section"
+      maxWidth="400px"
+      width="80vw"
+      textAlign="center"
+      mx="auto"
+      mt={5}
+      pt={5}
+      bg="white"
+      borderRadius="normal"
+      boxShadow="normal"
+      overflow="hidden">
       <Box
-        as="section"
-        maxWidth="400px"
-        width="80vw"
-        textAlign="center"
-        mx="auto"
-        mt={5}
-        pt={5}
-        bg="white"
-        borderRadius="normal"
-        boxShadow="normal"
-        overflow="hidden">
-        <Box
-          px={5}
-        >
-          <Title>Phonebook</Title>
-          <ContactForm addContact={addContact} />
-        </Box>
-        
-        <Box
-          mt={5}
-          py={5}
-          px={5}
-          bg="primary"
-        >
-          <Subtitle>Contacts</Subtitle>
-          <Filter value={filter} onChange={changeFilter} />
-          <ContactList
-            contacts={filteredContacts} onDeleteContact={deleteContact} />
-        </Box>
+        px={5}
+      >
+        <Title>Phonebook</Title>
+        <ContactForm addContact={addContact} />
       </Box>
-    )
-  }
-}
+        
+      <Box
+        mt={5}
+        py={5}
+        px={5}
+        bg="primary"
+      >
+        <Subtitle>Contacts</Subtitle>
+        <Filter value={filter} onChange={changeFilter} />
+        <ContactList
+          contacts={filteredContacts} onDeleteContact={deleteContact} />
+      </Box>
+    </Box>
+  );
+};
 
 Notify.init({
   position: 'center-top',
   fontSize: '16px',
   timeout: 4000,
   width: '400px'
-})
+});

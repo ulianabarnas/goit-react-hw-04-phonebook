@@ -7,7 +7,7 @@ export const Label = styled.label`
     font-weight: ${p => p.theme.fontWeights.semibold};
     margin-top:  ${p => p.theme.space[4]}px;
     color: ${p => p.theme.colors.text};
-`
+`;
 
 export const Input = styled(Field)`
     width: 100%;
@@ -18,7 +18,7 @@ export const Input = styled(Field)`
     border: ${p => p.theme.borders.normal} ${p => p.theme.colors.text};
     border-radius: ${p => p.theme.radii.normal};
     box-sizing: border-box;
-`
+`;
 
 export const Button = styled.button`
     display: block;
@@ -36,4 +36,4 @@ export const Button = styled.button`
     :hover, :focus {
         background-color: ${p => p.theme.colors.secondary};
     }
-`
+`;
